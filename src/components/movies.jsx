@@ -1,7 +1,7 @@
 import * as MovieService from "../services/fakeMovieService";
 import React, { Component } from "react";
 import Movie from "./movie";
-import Heart from "./heart";
+import Heart from "./common/heart";
 
 export default class Movies extends Component {
   constructor(props) {
