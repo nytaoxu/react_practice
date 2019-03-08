@@ -1,10 +1,32 @@
 import * as MovieService from "../services/fakeMovieService";
 import React, { Component } from "react";
 import Movie from "./movie";
+import Heart from "./heart";
 
 export default class Movies extends Component {
-  state = {
-    movies: MovieService.getMovies()
+  constructor(props) {
+    super(props);
+    this.state = {
+      movies: MovieService.getMovies(),
+      likes: {}
+    };
+    // this.state.movies.forEach(m => {
+    //   this.state.liked[this.state.movies._id] = false;
+    // });
+  }
+  handleClick = id => {
+    // console.log(id);
+    let likes = {};
+    this.state.movies.forEach(m => {
+      if (m._id === id) {
+        likes[m._id] = !this.state.likes[m._id];
+      } else {
+        likes[m._id] = this.state.likes[m._id];
+      }
+    });
+    this.setState({
+      likes
+    });
   };
   render() {
     return (
@@ -27,26 +49,24 @@ export default class Movies extends Component {
                     <th>Stock</th>
                     <th>Rate</th>
                     <th />
+                    <th />
                   </tr>
                 </thead>
                 <tbody>
                   {this.state.movies.map(movie => {
-                    // return (
-                    //   <Movie
-                    //     key={movie._id}
-                    //     _id={movie._id}
-                    //     title={movie.title}
-                    //     genre={movie.genre.name}
-                    //     stock={movie.numberInStock}
-                    //     rate={movie.dailyRentalRate}
-                    //   />
-                    // );
                     return (
                       <tr key={movie._id} number={movie._id} className="Movie">
                         <td style={{ fontWeight: "bold" }}>{movie.title}</td>
                         <td>{movie.genre.name}</td>
                         <td>{movie.numberInStock}</td>
                         <td>{movie.dailyRentalRate}</td>
+                        <td>
+                          <Heart
+                            id={movie._id}
+                            clicked={this.handleClick}
+                            liked={this.state.likes[movie._id]}
+                          />
+                        </td>
                         <td>
                           <button
                             onClick={e => {
@@ -58,7 +78,7 @@ export default class Movies extends Component {
                                 movies: MovieService.getMovies()
                               });
                             }}
-                            className="btn btn-danger btn-sm"
+                            className="btn btn-danger btn-sm m-2"
                           >
                             Delete
                           </button>
