@@ -2,20 +2,15 @@ import React, { Component } from "react";
 
 class Heart extends Component {
   render() {
-    if (this.props.liked)
-      return (
-        <i
-          onClick={() => this.props.clicked(this.props.id)}
-          className="fa fa-heart"
-        />
-      );
-    else
-      return (
-        <i
-          onClick={() => this.props.clicked(this.props.id)}
-          className="fa fa-heart-o"
-        />
-      );
+    let classes = "fa fa-heart";
+    if (!this.props.liked) classes += "-o";
+    return (
+      <i
+        style={{ cursor: "pointer" }}
+        onClick={this.props.clicked}
+        className={classes}
+      />
+    );
   }
 }
 

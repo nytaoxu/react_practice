@@ -1,31 +1,32 @@
 import * as MovieService from "../services/fakeMovieService";
 import React, { Component } from "react";
-import Movie from "./movie";
+// import Movie from "./movie";
 import Heart from "./common/heart";
 
 export default class Movies extends Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   movies: MovieService.getMovies()
+    // };
     this.state = {
-      movies: MovieService.getMovies(),
-      likes: {}
+      movies: MovieService.getMovies()
     };
-    // this.state.movies.forEach(m => {
-    //   this.state.liked[this.state.movies._id] = false;
-    // });
   }
-  handleClick = id => {
-    // console.log(id);
-    let likes = {};
-    this.state.movies.forEach(m => {
-      if (m._id === id) {
-        likes[m._id] = !this.state.likes[m._id];
-      } else {
-        likes[m._id] = this.state.likes[m._id];
-      }
-    });
+  handleLike = movie => {
+    // console.log(movie);
+    const movies = [...this.state.movies];
+    const index = movies.indexOf(movie);
+    // console.log(index);
+    movies[index].liked = !movies[index].liked;
     this.setState({
-      likes
+      movies
+    });
+  };
+  handleDelete = id => {
+    MovieService.deleteMovie(id);
+    this.setState({
+      movies: MovieService.getMovies()
     });
   };
   render() {
@@ -62,22 +63,22 @@ export default class Movies extends Component {
                         <td>{movie.dailyRentalRate}</td>
                         <td>
                           <Heart
-                            id={movie._id}
-                            clicked={this.handleClick}
-                            liked={this.state.likes[movie._id]}
+                            clicked={() => this.handleLike(movie)}
+                            liked={movie.liked}
                           />
                         </td>
                         <td>
                           <button
-                            onClick={e => {
-                              const number = e.target.parentNode.parentNode.getAttribute(
-                                "number"
-                              );
-                              MovieService.deleteMovie(number);
-                              this.setState({
-                                movies: MovieService.getMovies()
-                              });
-                            }}
+                            // onClick={e => {
+                            //   const number = e.target.parentNode.parentNode.getAttribute(
+                            //     "number"
+                            //   );
+                            //   MovieService.deleteMovie(number);
+                            //   this.setState({
+                            //     movies: MovieService.getMovies()
+                            //   });
+                            // }}
+                            onClick={() => this.handleDelete(movie._id)}
                             className="btn btn-danger btn-sm m-2"
                           >
                             Delete
