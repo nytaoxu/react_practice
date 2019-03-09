@@ -3,6 +3,7 @@ import React, { Component } from "react";
 // import Movie from "./movie";
 import Heart from "./common/heart";
 import Pagination from "./common/pagination";
+import { paginate } from "../utils/paginate";
 
 export default class Movies extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class Movies extends Component {
     // };
     this.state = {
       movies: MovieService.getMovies(),
+      currentPage: 1,
       pageSize: 4
     };
   }
@@ -32,9 +34,17 @@ export default class Movies extends Component {
     });
   };
   handlePageChange = pageNumber => {
-    console.log(pageNumber);
+    // console.log(pageNumber);
+    this.setState({
+      currentPage: pageNumber
+    });
   };
   render() {
+    const movies = paginate(
+      this.state.movies,
+      this.state.currentPage,
+      this.state.pageSize
+    );
     return (
       <div className="Movies">
         {(() => {
@@ -59,7 +69,7 @@ export default class Movies extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.state.movies.map(movie => {
+                  {movies.map(movie => {
                     return (
                       <tr key={movie._id} number={movie._id} className="Movie">
                         <td>{movie.title}</td>
@@ -87,6 +97,7 @@ export default class Movies extends Component {
               </table>
               <Pagination
                 itemsCount={this.state.movies.length}
+                currentPage={this.state.currentPage}
                 pageSize={this.state.pageSize}
                 onPageChange={this.handlePageChange}
               />
