@@ -2,6 +2,7 @@ import * as MovieService from "../services/fakeMovieService";
 import React, { Component } from "react";
 // import Movie from "./movie";
 import Heart from "./common/heart";
+import Pagination from "./common/pagination";
 
 export default class Movies extends Component {
   constructor(props) {
@@ -10,7 +11,8 @@ export default class Movies extends Component {
     //   movies: MovieService.getMovies()
     // };
     this.state = {
-      movies: MovieService.getMovies()
+      movies: MovieService.getMovies(),
+      pageSize: 4
     };
   }
   handleLike = movie => {
@@ -28,6 +30,9 @@ export default class Movies extends Component {
     this.setState({
       movies: MovieService.getMovies()
     });
+  };
+  handlePageChange = pageNumber => {
+    console.log(pageNumber);
   };
   render() {
     return (
@@ -57,7 +62,7 @@ export default class Movies extends Component {
                   {this.state.movies.map(movie => {
                     return (
                       <tr key={movie._id} number={movie._id} className="Movie">
-                        <td style={{ fontWeight: "bold" }}>{movie.title}</td>
+                        <td>{movie.title}</td>
                         <td>{movie.genre.name}</td>
                         <td>{movie.numberInStock}</td>
                         <td>{movie.dailyRentalRate}</td>
@@ -69,15 +74,6 @@ export default class Movies extends Component {
                         </td>
                         <td>
                           <button
-                            // onClick={e => {
-                            //   const number = e.target.parentNode.parentNode.getAttribute(
-                            //     "number"
-                            //   );
-                            //   MovieService.deleteMovie(number);
-                            //   this.setState({
-                            //     movies: MovieService.getMovies()
-                            //   });
-                            // }}
                             onClick={() => this.handleDelete(movie._id)}
                             className="btn btn-danger btn-sm m-2"
                           >
@@ -89,6 +85,11 @@ export default class Movies extends Component {
                   })}
                 </tbody>
               </table>
+              <Pagination
+                itemsCount={this.state.movies.length}
+                pageSize={this.state.pageSize}
+                onPageChange={this.handlePageChange}
+              />
             </React.Fragment>
           );
         })()}
