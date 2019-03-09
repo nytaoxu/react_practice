@@ -29,9 +29,16 @@ export default class Movies extends Component {
   };
   handleDelete = id => {
     MovieService.deleteMovie(id);
-    this.setState({
+    const newState = {
       movies: MovieService.getMovies()
-    });
+    };
+    if (
+      newState.movies.length <=
+      (this.state.currentPage - 1) * this.state.pageSize
+    ) {
+      newState.currentPage = this.state.currentPage - 1;
+    }
+    this.setState(newState);
   };
   handlePageChange = pageNumber => {
     // console.log(pageNumber);
