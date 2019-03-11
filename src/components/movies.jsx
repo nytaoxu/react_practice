@@ -47,6 +47,9 @@ export default class Movies extends Component {
     });
   };
   render() {
+    if (this.state.movies.length === 0) {
+      return <h1>There are no movies in the database.</h1>;
+    }
     const movies = paginate(
       this.state.movies,
       this.state.currentPage,
@@ -54,63 +57,56 @@ export default class Movies extends Component {
     );
     return (
       <div className="Movies">
-        {(() => {
-          if (this.state.movies.length === 0) {
-            return <h1>There are no movies in the database.</h1>;
-          }
-          return (
-            <React.Fragment>
-              <p>
-                Showing {this.state.movies.length} movie
-                {this.state.movies.length > 1 ? "s" : ""} in the database.
-              </p>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Genre</th>
-                    <th>Stock</th>
-                    <th>Rate</th>
-                    <th />
-                    <th />
+        <React.Fragment>
+          <p>
+            Showing {this.state.movies.length} movie
+            {this.state.movies.length > 1 ? "s" : ""} in the database.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Stock</th>
+                <th>Rate</th>
+                <th />
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {movies.map(movie => {
+                return (
+                  <tr key={movie._id} number={movie._id} className="Movie">
+                    <td>{movie.title}</td>
+                    <td>{movie.genre.name}</td>
+                    <td>{movie.numberInStock}</td>
+                    <td>{movie.dailyRentalRate}</td>
+                    <td>
+                      <Heart
+                        clicked={() => this.handleLike(movie)}
+                        liked={movie.liked}
+                      />
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => this.handleDelete(movie._id)}
+                        className="btn btn-danger btn-sm m-2"
+                      >
+                        Delete
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {movies.map(movie => {
-                    return (
-                      <tr key={movie._id} number={movie._id} className="Movie">
-                        <td>{movie.title}</td>
-                        <td>{movie.genre.name}</td>
-                        <td>{movie.numberInStock}</td>
-                        <td>{movie.dailyRentalRate}</td>
-                        <td>
-                          <Heart
-                            clicked={() => this.handleLike(movie)}
-                            liked={movie.liked}
-                          />
-                        </td>
-                        <td>
-                          <button
-                            onClick={() => this.handleDelete(movie._id)}
-                            className="btn btn-danger btn-sm m-2"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-              <Pagination
-                itemsCount={this.state.movies.length}
-                currentPage={this.state.currentPage}
-                pageSize={this.state.pageSize}
-                onPageChange={this.handlePageChange}
-              />
-            </React.Fragment>
-          );
-        })()}
+                );
+              })}
+            </tbody>
+          </table>
+          <Pagination
+            itemsCount={this.state.movies.length}
+            currentPage={this.state.currentPage}
+            pageSize={this.state.pageSize}
+            onPageChange={this.handlePageChange}
+          />
+        </React.Fragment>
       </div>
     );
   }
