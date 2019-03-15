@@ -4,11 +4,12 @@ import React from "react";
 
 const ListGroup = props => {
   return (
-    <ul class="list-group">
-      <li className="list-group-item">Cras justo odio</li>
-      <li className="list-group-item">Cras justo odio</li>
-      <li className="list-group-item">Cras justo odio</li>
-      <li className="list-group-item">Cras justo odio</li>
+    <ul className="list-group">
+      {props.items.map(i => (
+        <li key={i._id} className="list-group-item">
+          {i.name}
+        </li>
+      ))}
     </ul>
   );
 };
