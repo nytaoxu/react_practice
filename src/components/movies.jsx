@@ -12,7 +12,8 @@ export default class Movies extends Component {
     movies: [],
     genres: [],
     currentPage: 1,
-    pageSize: 4
+    pageSize: 4,
+    selectedGenre: null
   };
 
   componentDidMount() {
@@ -53,29 +54,51 @@ export default class Movies extends Component {
       currentPage: pageNumber
     });
   };
+  handleGenreSelect = genre => {
+    /**
+     *  structure of this.state
+      state = {
+        movies: [],
+        genres: [],
+        currentPage: 1,
+        pageSize: 4
+      };
+    */
+    this.setState({
+      selectedGenre: genre,
+      currentPage: 1
+    });
+    console.log();
+  };
   render() {
     if (this.state.movies.length === 0) {
       return <h1>There are no movies in the database.</h1>;
     }
-    const movies = paginate(
-      this.state.movies,
-      this.state.currentPage,
-      this.state.pageSize
-    );
+    let {
+      genres,
+      selectedGenre,
+      movies: allMovies,
+      currentPage,
+      pageSize
+    } = this.state;
+    if (selectedGenre) {
+      allMovies = allMovies.filter(m => m.genre.name === selectedGenre.name);
+    }
+    const movies = paginate(allMovies, currentPage, pageSize);
     return (
       <div className="Movies">
         <div className="row">
           <div className="col-3">
             <ListGroup
-              items={this.state.genres}
-              textProperty="name"
-              valueProperty="_id"
+              items={genres}
+              onItemSelect={this.handleGenreSelect}
+              selectedGenre={this.state.selectedGenre}
             />
           </div>
           <div className="col">
             <p>
-              Showing {this.state.movies.length} movie
-              {this.state.movies.length > 1 ? "s" : ""} in the database.
+              Showing {allMovies.length} movie
+              {allMovies.length > 1 ? "s" : ""} in the database.
             </p>
             <table>
               <thead>
@@ -116,9 +139,9 @@ export default class Movies extends Component {
               </tbody>
             </table>
             <Pagination
-              itemsCount={this.state.movies.length}
-              currentPage={this.state.currentPage}
-              pageSize={this.state.pageSize}
+              itemsCount={allMovies.length}
+              currentPage={currentPage}
+              pageSize={pageSize}
               onPageChange={this.handlePageChange}
             />
           </div>
