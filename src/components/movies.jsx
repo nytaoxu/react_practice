@@ -19,7 +19,13 @@ export default class Movies extends Component {
   componentDidMount() {
     this.setState({
       movies: MovieService.getMovies(),
-      genres: GenreService.getGenres()
+      genres: [
+        {
+          name: "All Genre",
+          _id: ""
+        },
+        ...GenreService.getGenres()
+      ]
     });
   }
 
@@ -64,11 +70,17 @@ export default class Movies extends Component {
         pageSize: 4
       };
     */
-    this.setState({
-      selectedGenre: genre,
-      currentPage: 1
-    });
-    console.log();
+    if (genre && genre.name === "All Genre") {
+      this.setState({
+        selectedGenre: null,
+        currentPage: 1
+      });
+    } else {
+      this.setState({
+        selectedGenre: genre,
+        currentPage: 1
+      });
+    }
   };
   render() {
     if (this.state.movies.length === 0) {
