@@ -12,13 +12,6 @@ const ListGroup = props => {
   } = props;
   return (
     <ul className="list-group">
-      <li
-        style={{ cursor: "pointer" }}
-        className="list-group-item"
-        onClick={() => onItemSelect(null)}
-      >
-        All Genre
-      </li>
       {items.map(i => (
         <li
           key={i[valueProperty]}
