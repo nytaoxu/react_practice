@@ -3,7 +3,6 @@ import * as GenreService from "../services/fakeGenreService";
 import React, { Component } from "react";
 // import Movie from "./movie";
 import ListGroup from "./common/listGroup";
-
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import MoviesTable from "./moviesTable";
@@ -14,7 +13,8 @@ export default class Movies extends Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
-    selectedGenre: null
+    selectedGenre: {},
+    sortColumn: {}
   };
 
   componentDidMount() {
@@ -26,7 +26,15 @@ export default class Movies extends Component {
           _id: ""
         },
         ...GenreService.getGenres()
-      ]
+      ],
+      selectedGenre: {
+        name: "All Genre",
+        _id: ""
+      },
+      sortColumn: {
+        path: "title",
+        order: "asc"
+      }
     });
   }
 
@@ -71,17 +79,14 @@ export default class Movies extends Component {
         pageSize: 4
       };
     */
-    if (genre && genre.name === "All Genre") {
-      this.setState({
-        selectedGenre: null,
-        currentPage: 1
-      });
-    } else {
-      this.setState({
-        selectedGenre: genre,
-        currentPage: 1
-      });
-    }
+
+    this.setState({
+      selectedGenre: genre,
+      currentPage: 1
+    });
+  };
+  handleSort = path => {
+    console.log(path);
   };
   render() {
     if (this.state.movies.length === 0) {
@@ -94,7 +99,7 @@ export default class Movies extends Component {
       currentPage,
       pageSize
     } = this.state;
-    if (selectedGenre) {
+    if (selectedGenre.name !== "All Genre") {
       allMovies = allMovies.filter(m => m.genre.name === selectedGenre.name);
     }
     const movies = paginate(allMovies, currentPage, pageSize);
@@ -117,6 +122,7 @@ export default class Movies extends Component {
               movies={movies}
               onLike={this.handleLike}
               onDelete={this.handleDelete}
+              onSort={this.handleSort}
             />
             <Pagination
               itemsCount={allMovies.length}
