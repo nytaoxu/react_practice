@@ -37,6 +37,8 @@ export default class Movies extends Component {
     const newState = {
       movies: MovieService.getMovies()
     };
+    // the following 'if' statement handles tha case in which
+    // there are no more entries in current page.
     if (
       newState.movies.length <=
       (this.state.currentPage - 1) * this.state.pageSize
@@ -63,7 +65,7 @@ export default class Movies extends Component {
     return (
       <div className="Movies">
         <div className="row">
-          <div className="col-2">
+          <div className="col-3">
             <ListGroup items={this.state.genres} />
           </div>
           <div className="col">
