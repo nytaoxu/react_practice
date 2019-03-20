@@ -66,7 +66,11 @@ export default class Movies extends Component {
       <div className="Movies">
         <div className="row">
           <div className="col-3">
-            <ListGroup items={this.state.genres} />
+            <ListGroup
+              items={this.state.genres}
+              textProperty="name"
+              valueProperty="_id"
+            />
           </div>
           <div className="col">
             <p>
