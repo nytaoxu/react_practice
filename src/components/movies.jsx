@@ -3,9 +3,10 @@ import * as GenreService from "../services/fakeGenreService";
 import React, { Component } from "react";
 // import Movie from "./movie";
 import ListGroup from "./common/listGroup";
-import Heart from "./common/heart";
+
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
+import MoviesTable from "./moviesTable";
 
 export default class Movies extends Component {
   state = {
@@ -112,44 +113,11 @@ export default class Movies extends Component {
               Showing {allMovies.length} movie
               {allMovies.length > 1 ? "s" : ""} in the database.
             </p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Genre</th>
-                  <th>Stock</th>
-                  <th>Rate</th>
-                  <th />
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {movies.map(movie => {
-                  return (
-                    <tr key={movie._id} number={movie._id} className="Movie">
-                      <td>{movie.title}</td>
-                      <td>{movie.genre.name}</td>
-                      <td>{movie.numberInStock}</td>
-                      <td>{movie.dailyRentalRate}</td>
-                      <td>
-                        <Heart
-                          clicked={() => this.handleLike(movie)}
-                          liked={movie.liked}
-                        />
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => this.handleDelete(movie._id)}
-                          className="btn btn-danger btn-sm m-2"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <MoviesTable
+              movies={movies}
+              onLike={this.handleLike}
+              onDelete={this.handleDelete}
+            />
             <Pagination
               itemsCount={allMovies.length}
               currentPage={currentPage}
