@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import Heart from "./common/heart";
 import TableHeader from "./common/tableHeader";
+import TableBody from "./common/tableBody";
+import Heart from "./common/heart";
 
 class MoviesTable extends Component {
   columns = [
@@ -8,8 +9,23 @@ class MoviesTable extends Component {
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rate" },
-    { path: "like" },
-    { path: "delete" }
+    {
+      path: "like",
+      content: movie => (
+        <Heart clicked={() => this.props.onLike(movie)} liked={movie.liked} />
+      )
+    },
+    {
+      path: "delete",
+      content: movie => (
+        <button
+          onClick={() => this.props.onDelete(movie._id)}
+          className="btn btn-danger btn-sm m-2"
+        >
+          Delete
+        </button>
+      )
+    }
   ];
   render() {
     const { movies, onLike, onDelete, onSort, sortColumn } = this.props;
@@ -20,29 +36,12 @@ class MoviesTable extends Component {
           onSort={onSort}
           sortColumn={sortColumn}
         />
-        <tbody>
-          {movies.map(movie => {
-            return (
-              <tr key={movie._id} number={movie._id} className="Movie">
-                <td>{movie.title}</td>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <Heart clicked={() => onLike(movie)} liked={movie.liked} />
-                </td>
-                <td>
-                  <button
-                    onClick={() => onDelete(movie._id)}
-                    className="btn btn-danger btn-sm m-2"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
+        <TableBody
+          data={movies}
+          columns={this.columns}
+          onLike={onLike}
+          onDelete={onDelete}
+        />
       </table>
     );
   }
