@@ -71,16 +71,6 @@ export default class Movies extends Component {
     });
   };
   handleGenreSelect = genre => {
-    /**
-     *  structure of this.state
-      state = {
-        movies: [],
-        genres: [],
-        currentPage: 1,
-        pageSize: 4
-      };
-    */
-
     this.setState({
       selectedGenre: genre,
       currentPage: 1
@@ -89,18 +79,8 @@ export default class Movies extends Component {
   handleSort = sortColumn => {
     this.setState({ sortColumn });
   };
-  render() {
-    if (this.state.movies.length === 0) {
-      return <h1>There are no movies in the database.</h1>;
-    }
-    let {
-      genres,
-      selectedGenre,
-      movies: allMovies,
-      currentPage,
-      pageSize,
-      sortColumn
-    } = this.state;
+  getPagedData = () => {
+    let { selectedGenre, movies: allMovies, sortColumn } = this.state;
     if (selectedGenre.name !== "All Genre") {
       allMovies = allMovies.filter(m => m.genre.name === selectedGenre.name);
     }
@@ -110,6 +90,16 @@ export default class Movies extends Component {
       // Beware of nested object values
       allMovies = _.orderBy(allMovies, m => m.genre.name, [sortColumn.order]);
     }
+    return { allMovies };
+  };
+  render() {
+    if (this.state.movies.length === 0) {
+      return <h1>There are no movies in the database.</h1>;
+    }
+    const { genres, currentPage, pageSize, sortColumn } = this.state;
+
+    const { allMovies } = this.getPagedData();
+
     const movies = paginate(allMovies, currentPage, pageSize);
     return (
       <div className="Movies">
